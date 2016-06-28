@@ -25,8 +25,12 @@
             <div class="form-group">
                 <label for="fieldPhoto" class="col-sm-2 control-label">Puppy Photo</label>
                 <div class="col-sm-4">
+                    <span class="btn btn-default btn-file">
                     <input type="file" class="form-control" required
-                        accept="image/*" id="fieldPhoto" name="photo">
+                        accept="image/*" id="fieldPhoto" data-url="/upload"
+                        multiple name="photo">
+                    </span>
+                    <div id="fileUploads"></div>
                 </div>
             </div>
             <div class="form-group">

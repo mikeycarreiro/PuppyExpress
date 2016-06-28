@@ -3,3 +3,6 @@
 
 # ignore npm packages
 node_modules
+
+# other files
+credentials.js

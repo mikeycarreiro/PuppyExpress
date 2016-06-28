@@ -28,6 +28,19 @@ app.use(function(req, res, next) {
         next();
 });
 
+// jQuery file upload middleware
+app.use('/upload', function(req, res, next){
+    var now = Date.now();
+    jqupload.fileHandler({
+        uploadDir: function() {
+            return __dirname + '/public/uploads/' + now;
+        },
+        uploadUrl: function() {
+            return '/uploads/' + now;
+        }
+    })(req, res, next);
+});
+
 app.get('/', function(req, res) {
     res.render('home', {
         bgImage: backgrounds.getBackground('home')
@@ -41,23 +54,27 @@ app.get('/about', function(req, res) {
     });
 });
 
-app.get('/puppy-upload', function(req, res) {
+app.get('/puppy-upload', function(req, res){
+    var now = new Date();
     res.render('puppy-upload', {
-        bgImage: backgrounds.getBackground('upload')
+        bgImage: backgrounds.getBackground('upload'),
+        year: now.getFullYear(),
+        month: now.getMonth()
     });
 });
 
-// jQuery file upload middleware
-app.use('/upload', function(req, res, next){
-    var now = Date.now();
-    jqupload.fileHandler({
-        uploadDir: function() {
-            return __dirname + '/public/uploads/' + now;
-        },
-        uploadUrl: function() {
-            return '/uploads/' + now;
+app.post('puppy-upload/:year/:month', function(req, res){
+    var form = new formidable.IncomingForm();
+    form.parse(req, function(err, fields, files){
+        if (err) {
+            return res.redirect(303, '/error');
         }
-    })(req, res, next);
+        console.log('received fields:');
+        console.log(fields);
+        console.log('received files:');
+        console.log(files);
+        res.redirect(303, '/thank-you');
+    });
 });
 
 // custom 404 page
